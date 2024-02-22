@@ -1,5 +1,29 @@
 from random import choice, randint
 
+
+class SwordBonus:
+    """Описує функціонал бонусів"""
+    @staticmethod
+    def poison(item):
+        if isinstance(item, Swords):
+            item.damag += 1
+            return f"Застосовано бонус отрути {item.name}"
+        raise ValueError(f"Неможливо застосувати бонус до класу {type(item)}")
+    
+    @staticmethod
+    def confusion(item):
+        if isinstance(item, Swords):
+            item.damag += 2
+            return f"Застосовано бонус спантеличеність {item.name}"
+        raise ValueError(f"Неможливо застосувати бонус до класу {type(item)}")
+    
+    @staticmethod
+    def strength(item):
+        if isinstance(item, Swords):
+            item.vitality += 1
+            return f"Застосовано бонус сили до {item.name}"
+        raise ValueError(f"Неможливо застосувати бонус до класу {type(item)}")
+
 class Swords:
     who_has_buff = [] # Ця класова змінна відслідковує на які обєкти зараз накладено баф
     rarity_map = {"Basic": 1, "Green": 2, "Blue": 5, "Epic": 8, "Legend": 10} # Це мапа яка вказує коефіцієнт збільшення атрибутів відносно Рідкісності предмету
@@ -25,8 +49,13 @@ class Swords:
     @classmethod
     def create_from_rarity(cls, name:str, rarity:str):
         """Це конструктор використовуємо коли ми отримуємо меч з крафту"""
+        bonus_list = [method for method in dir(SwordBonus) if callable(getattr(SwordBonus, method)) and not method.startswith("__")]
+        bonus = None
+        if rarity in list(cls.rarity_map.keys())[-3:]:
+            bonus = getattr(SwordBonus, choice(bonus_list))
+
         if rarity in cls.rarity_map.keys():
-            return cls(name, rarity, damag=3*cls.rarity_map[rarity], vitality=5*cls.rarity_map[rarity])
+            return cls(name, rarity, damag=3*cls.rarity_map[rarity], vitality=5*cls.rarity_map[rarity], bonus = bonus)
         raise AttributeError(f"Неправильно задано рідкісність предмету, повинно бути один з {list(cls.rarity_map.keys())}")
     
     @classmethod
