@@ -9,24 +9,38 @@ class SwordBonus:
         SwordBonus.count += 1
 
     @staticmethod
-    def poison(item) -> str:
-        """Накладення отрути"""
+    def bonus_poison(item) -> str:
+        """Накладення отрути, шкода +1"""
         if SwordBonus.__check_obj(item):
             item.damag += 1
             return f"Застосовано бонус отрути {item.name}"
     
     @staticmethod
-    def confusion(item) -> str:
-        """Накладення конфузії"""
+    def bonus_confusion(item) -> str:
+        """Накладення конфузії, шкода +2"""
         if SwordBonus.__check_obj(item):
             item.damag += 2
             return f"Застосовано бонус спантеличеність {item.name}"
     
     @staticmethod
-    def strength(item) -> str:
-        """Накладення міцності"""
+    def bonus_berserk(item) -> str:
+        """Ефукт Берсерка, шкода +10"""
         if SwordBonus.__check_obj(item):
-            item.vitality += 1
+            item.damag += 10
+            return f"Застосовано бонус Берсерка {item.name}"
+    
+    @staticmethod
+    def bonus_strength(item) -> str:
+        """Накладення міцності, міцність +5"""
+        if SwordBonus.__check_obj(item):
+            item.vitality += 5
+            return f"Застосовано бонус сили до {item.name}"
+        
+    @staticmethod
+    def bonus_invincible(item) -> str:
+        """Накладення ефект Незламності, міцність +15"""
+        if SwordBonus.__check_obj(item):
+            item.vitality += 15
             return f"Застосовано бонус сили до {item.name}"
     
     @staticmethod
@@ -35,6 +49,11 @@ class SwordBonus:
         if SwordBonus.__check_obj(item):
             return f"Меч {item.name} має занизьку рідкісність!"
     
+    @staticmethod
+    def list_bonus_methods() -> list:
+        """Знаходимо методи що надають бонуси, вони будуть починатись з bonus_, та повертаємо їх список"""
+        return [method for method in dir(SwordBonus) if callable(getattr(SwordBonus, method)) and method.startswith("bonus_")]
+
     @staticmethod
     def __check_obj(obj: Any) -> bool:
         """Реалізували приватний метод який перевіряє чи ми працюємо з правильним обєктом"""
@@ -53,15 +72,12 @@ class SwordBonus:
     def __len__(self) -> int:
         """Застосування методу довжини поверне кількість бонусів які реалізовані в даному класі"""
         return len(SwordBonus.bonus_list())
-    
-    @staticmethod
-    def _bonus_list() -> list:
-        return [method for method in dir(SwordBonus) if callable(getattr(SwordBonus, method)) and not method.startswith("__") and not method.startswith("_")]
-
+  
 
 class Swords:
     who_has_buff = [] # Ця класова змінна відслідковує на які обєкти зараз накладено баф
-    rarity_map = {"Basic": 1, "Green": 2, "Blue": 5, "Epic": 8, "Legend": 10} # Це мапа яка вказує коефіцієнт збільшення атрибутів відносно Рідкісності предмету
+    # Це мапа яка вказує коефіцієнт збільшення атрибутів відносно Рідкісності предмету
+    rarity_map = {"Basic": 1, "White": 2, "Green": 3, "Blue": 5, "Yellow": 7, "Epic": 9, "Legend": 10} 
     
     def __init__(self, name:str, rarity:str, damag:int, vitality:int, bonus: callable) -> None: # Це є свого роду конструктор
         """Конструктор для створення обєкту Меч.
@@ -76,7 +92,6 @@ class Swords:
         self.damag = damag
         self.vitality = vitality
         self.bonus = bonus.__doc__ # тут ми просто будемо знати що за бонус був застосований до нашого обєкту
-        print(bonus)
         bonus(self) # тут ми застосовуємо бонус до нашого поточного обєкту
 
         self.buff_damage = 0
@@ -86,7 +101,7 @@ class Swords:
     @classmethod
     def create_from_rarity(cls, name:str, rarity:str):
         """Це конструктор використовуємо коли ми отримуємо меч з крафту"""
-        bonus_list = SwordBonus._bonus_list()
+        bonus_list = SwordBonus.list_bonus_methods()
         bonus = SwordBonus._nothing
         if rarity in list(cls.rarity_map.keys())[-3:]:
             bonus = getattr(SwordBonus, choice(bonus_list))
@@ -137,10 +152,13 @@ class Swords:
             self.debuff.append("трішина")
         self.vitality -= len(self.debuff)
     
-    def repair(self, r:int):
+    def repair(self):
         """Метод реалізує відновлення міцності предмету під час ремонту"""
-        self.vitality += r * Swords.rarity_map[self.rarity]
-        self.debuff = [] # Знімаємо всі дебафи
+        if randint(0, 1):
+            self.vitality += Swords.rarity_map[self.rarity]
+            self.debuff = [] # Знімаємо всі дебафи
+            return f"{self.name} відремонтовано та знято всі дебафи."
+        return f"Не вийшло відремонтувати {self.name}"
 
     def attack(self, item = None) -> str:
         """Метод для атаки
