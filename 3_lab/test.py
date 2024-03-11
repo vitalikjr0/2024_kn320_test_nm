@@ -1,9 +1,11 @@
 import unittest
 from axe import Axe
 from swords_bonus import SwordBonus
+from sword import Swords
 
 # клас для тестування повинен починатись з слова Test
 class TestSwordBonus(unittest.TestCase):
+    """Починаємо тестування Бонусів для меча"""
     # В даному класі реалізуються всі юніттести у вигляді методів
     # кожен юніттест (назва функції) повинен починатись з префікса імені "test_"
     # оскільки ми працюємо в класі, ми працюємо з методами, і маємо вказівник на обєкт self який містить 
@@ -65,6 +67,62 @@ class TestSwordBonus(unittest.TestCase):
         self.assertIsNone(self.sb.bonus_confusion(1), "До цього обєкне не можна застосовувати накладення бафів, неправильний обєкт")
         
 
+class TestApplyBuffs(unittest.TestCase):
+    """Клас призначений для тестування накладання бафів на меч"""
+    def setUp(self) -> None:
+        self.s = Swords.create_random_rarity("Тренувальний Меч")
+        return super().setUp()
+    
+    def tearDown(self) -> None:
+        del self.s
+        return super().tearDown()
+    
+    def test_get_correct_damage_buff(self):
+        """Тестуємо правильність накладання бафу нанесення шкоди"""
+        self.assertEqual(self.s.hit, self.s.damag, f"Значення damage {self.s.damag} не рівне значенню hit {self.s.hit}")
+        self.s.get_buff_damag(4)
+        self.assertGreater(self.s.hit, self.s.damag, "Накладений баф нанесення шкоди НЕ підвищив атрибут нанесення шкоди.")
+        self.assertIn(self.s.__hash__, Swords.who_has_buff, f"Неправильно відстежуються накладені бафи в глобальній змінній who_has_buff {Swords.who_has_buff}")
+
+
+class TestSwordsCreation(unittest.TestCase):
+    """В цьому класі ми тестуємо Клас Меча"""
+    # давайте не будемо робити в цьому класі початкової ініціалізації для Меча
+    # а натомість, в кожному тесті ми просто будемо тестувати інший спосіб створення Меча
+    
+    def test_create_sword_from_constructor(self):
+        """Тестуємо створення меча через основний конструктор класу Swords"""
+        d = {'name': 'Тренувальний Меч', 
+             'rarity': 'Epic', 
+             'damag': 5, 
+             'vitality': 10, 
+             'bonus': SwordBonus._nothing.__doc__, 
+             'buff_damage': 0, 
+             'buff_vitality': 0, 
+             'debuff': []}
+        s = Swords(d["name"], d["rarity"], d["damag"], d["vitality"], SwordBonus._nothing)
+        self.assertIsInstance(s, Swords, f"Щось пішло не так і меч не є класу {Swords.__repr__}")
+        self.assertDictEqual(d, s.__dict__, f"У стореному Мечі немає базових атрибутів доступних через __dict__ {s.__dict__}")
+    
+    def test_create_sword_with_correct_rarity(self):
+        """Тестуємо правильність сторення меча із задоною характеристикою рідкісності"""
+        s = Swords.create_from_rarity("Тренувальний Меч", "Epic")
+        self.assertEqual(s.damag, 3*Swords.rarity_map["Epic"], "Неправильно вирахувано величину нанесення шкоди.")
+        # наступна перевірка. викличе помилку в ініціалізації Меча, але ми так і хочемо, тому ми виловлюємо цю помилку
+        with self.assertRaises(AttributeError):
+            Swords.create_from_rarity("Тренувальний Меч", "NonExist")
+        # навіть після виникнення помилки, ми продовжуємо тестування
+        # тут тестуємо, відповідність присвоєного бонусу відповідно до заданої рідкісності
+        self.assertFalse(s.bonus == SwordBonus._nothing.__doc__, "Меч з рідкісністю Epic повинен мати бонус")
+        s = Swords.create_from_rarity("Тренувальний Меч", "Green")
+        self.assertTrue(s.bonus == SwordBonus._nothing.__doc__, "Меч з рідкісністю Green НЕ повинен мати бонус")
+
+    def test_create_sword_from_random_rarity(self):
+        """Тестуємо створення меча з випідковою характеристикою рідкісності"""
+        name = 'Тренувальний Меч'
+        s = Swords.create_random_rarity(name)
+        self.assertIn(s.rarity, Swords.rarity_map.keys(), f"Рідкісність меча не відповідає заданим в {Swords.rarity_map.keys()}.")
+        self.assertTrue(s.name == name, "Меч з випадковою рідкіснісю має неправильне Імя.")
 
 # Ця конструкція if не дозволить запустити цей код якщо ми його імпортнемо в інший файл
 if __name__ == '__main__':
