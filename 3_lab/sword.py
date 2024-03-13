@@ -20,6 +20,7 @@ class Swords:
         self.damag = damag
         self.vitality = vitality
         self.bonus = bonus.__doc__ # тут ми просто будемо знати що за бонус був застосований до нашого обєкту
+        # TODO: тут проблема, атрибути не збільшуються, тобто бонус не накладається
         bonus(self) # тут ми застосовуємо бонус до нашого поточного обєкту
 
         self.buff_damage = 0
@@ -140,4 +141,6 @@ class Swords:
     def health(self):
         """Проперті яка визначає всю витривалість ХП який має обєкт"""
         return self.vitality
-
+    
+    def __repr__(self) -> str:
+        return "Swords()"
