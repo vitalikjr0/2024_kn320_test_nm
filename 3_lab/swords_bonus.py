@@ -42,6 +42,8 @@ class SwordBonus:
             item.vitality += 15
             return f"Застосовано бонус сили до {item.name}"
     
+    # Якщо тут добавлять новий бонус то нам прийдеться дописувати для нього тести
+
     @staticmethod
     def _nothing(item) -> str:
         """Пустий бонус для мечів з низькою якістю"""
