@@ -37,6 +37,16 @@ def create_players() -> Swords:
     print(f"Гравець {s.player} отримує Меч:", s.info)
     return s
 
+def select_buff(player_name: str) -> str:
+    """Функція для здійснення ходу гравцем, вибір Бафа."""
+    buff = input(f"{player_name}, введіть 1 для бафу на атаку, 2 для бафу на міцність, будь-яка кнопка щоб пропустити: ")
+    if buff in ["1", "2"]:
+        return buff
+    print("Помилка: Потрібно було ввести 1 або 2. Гравець пропускає хід.")
+    return None
+
+
+
 # виконання всієї програми
 if __name__ == "__main__":
     print("Старт гри:")
@@ -45,8 +55,8 @@ if __name__ == "__main__":
     d = create_players()
 
     # Дозволимо гравцю впливати на те як ми будемо змагатись на отриманих мечах
-    c.player_buff = input(f"{c.player} ведіть 1 для бафу на атаку, 2 для бафу на міцності, будь-яка кнопка щоб пропустити: ")
-    d.player_buff = input(f"{d.player} ведіть 1 для бафу на атаку, 2 для бафу на міцності, будь-яка кнопка щоб пропустити: ")
+    c.player_buff = select_buff(c.player)
+    d.player_buff = select_buff(d.player)
     
     for pb in [c, d]:
         if pb.player_buff == "1": # Ця перевірка нам потрібна щоб визначити чи гравці ввели правильні значення
