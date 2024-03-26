@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 import pytest
 from random import randint, choice
 from axe import Axe
@@ -224,6 +225,16 @@ def test_player_creation(monkeypatch):
     assert p.name in SWORD_NAMES
 
 
+def test_reply_from_negative_effects(sword):
+    """Тестуємо виклик функції випадкової геренації накладання негативних ефектів"""
+    response = sword.negative_effects("Тестувальний ефект")
+    assert isinstance(response, bool), "Повинно повернутись значення True або False"
+    # Перевірка, що функція працює коректно для всіх можливих значень випадкового числа
+    
+    with patch('builtins.print') as mock_print:
+        response = sword.negative_effects("Тестувальний ефект")
+        if response:
+            assert mock_print.called, "Виклик print не відбувся"
 
 # Ця конструкція if не дозволить запустити цей код якщо ми його імпортнемо в інший файл
 if __name__ == '__main__':

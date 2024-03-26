@@ -111,10 +111,9 @@ class Swords:
         return self.vitality
     
     @staticmethod
-    def negative_effects(name:str) -> int:
+    def negative_effects(name:str) -> bool:
         """Визначаємо чи меч випадковим чином отримав якийсь негативний ефект"""
-        r = randint(0, 4)
-        if r > 2:
+        if randint(0, 4) > 2:
             print(f"Меч отримав негативнй ефект {name}, повертаємо дебаф на 1")
             return True
         return False
