@@ -49,4 +49,5 @@ jobs:
       uses: codecov/codecov-action@v4.1.1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+        slug: BobasB/2024_kn320_test_nm
         directory: 3_lab/
