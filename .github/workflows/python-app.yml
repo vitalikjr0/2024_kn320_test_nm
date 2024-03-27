@@ -23,7 +23,9 @@ jobs:
       with:
         python-version: "3.11"
 
-    - name: Install dependencies
+    - name: Install dependencies93bc8
+  uses: codecov/codecov-action@v4.1.1
+  with:
       run: |
         python -m pip install --upgrade pip
         pip install pipenv
@@ -37,8 +39,14 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     
-    - name: Test with pytest
+    - name: Test with pytest and CodeCov
       run: |
         cd 3_lab
-        pytest -vra --md=report.md --emoji test.py
+        coverage run -m pytest -vra test.py
+        coverage xml
         echo "Всі тести пройшли успішно!"
+    - name: Codecov
+      uses: codecov/codecov-action@v4.1.1
+      with:
+        directory: 3_lab/
+    
