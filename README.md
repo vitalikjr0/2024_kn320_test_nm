@@ -3,7 +3,7 @@
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/BobasB/2024_kn320_test_nm/python-app.yml?branch=main&style=flat-square)
 ![GitHub top language](https://img.shields.io/github/languages/top/bobasb/2024_kn320_test_nm)
 ![GitHub language count](https://img.shields.io/github/languages/count/bobasb/2024_kn320_test_nm?style=flat-square)
-
+[![codecov](https://codecov.io/gh/BobasB/2024_kn320_test_nm/graph/badge.svg?token=8VX3NYGR0X)](https://codecov.io/gh/BobasB/2024_kn320_test_nm)
 
 
 # 2024_kn320_test_nm
