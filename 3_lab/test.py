@@ -128,11 +128,15 @@ class TestApplyBuffs(unittest.TestCase):
     def test_get_correct_damage_buff(self):
         """Тестуємо правильність накладання бафу нанесення шкоди"""
         self.assertEqual(self.s.hit, self.s.damag, f"Значення damage {self.s.damag} не рівне значенню hit {self.s.hit}")
-        self.s.get_buff_damag(4)
+        result = self.s.get_buff_damag(4)
+        self.assertIsInstance(result, str, "Відповідь після накладення бафу має бути стрічкою.")
         self.assertGreater(self.s.hit, self.s.damag, "Накладений баф нанесення шкоди НЕ підвищив атрибут нанесення шкоди.")
         self.assertIn(self.s.__hash__, Swords.who_has_buff, f"Неправильно відстежуються накладені бафи в глобальній змінній who_has_buff {Swords.who_has_buff}")
 
-    def test_get_buff_vitality(self):
+        result_fail = self.s.get_buff_damag(5)
+        self.assertNotEqual(result, result_fail, f"Не можна накласти баф вдруге, відповідь неправильна -> {result_fail}.")
+
+    def test_get_correct_buff_vitality(self):
         """Тестеємо застосування бафу витривалості"""
         v = 5 # значення на яке ми збільшуємо витривалість через баф
         result = self.s.get_buff_vitality(v)
