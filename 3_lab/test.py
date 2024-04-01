@@ -138,8 +138,10 @@ class TestApplyBuffs(unittest.TestCase):
         result = self.s.get_buff_vitality(v)
         self.assertIsNotNone(result, "Ми отримали None при виклику накладення бафу витривалості.")
         self.assertIsInstance(result, str, "Відповідь після накладення бафу має бути стрічкою.")
-        self.assertTrue(hasattr(self.s, "buff_vitality", "В обєкта Меча відсутній атрибут 'buff_vitality'."))
+        self.assertTrue(hasattr(self.s, "buff_vitality"), "В обєкта Меча відсутній атрибут 'buff_vitality'.")
         self.assertEqual(self.s.buff_vitality, v, f"Застосоване значення бафу витривалості не відповідає значенню {v}.")
+
+        self.assertTrue(len(Swords.who_has_buff) > 0, f"Не було додано запис про накладення бафу на Меч, {Swords.who_has_buff}")
 
         result_fail = self.s.get_buff_vitality(v)
         self.assertNotEqual(result, result_fail, f"Не можна накласти баф вдруге, відповідь неправильна -> {result_fail}.")
