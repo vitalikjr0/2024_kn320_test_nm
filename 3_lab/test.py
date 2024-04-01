@@ -132,6 +132,15 @@ class TestApplyBuffs(unittest.TestCase):
         self.assertGreater(self.s.hit, self.s.damag, "Накладений баф нанесення шкоди НЕ підвищив атрибут нанесення шкоди.")
         self.assertIn(self.s.__hash__, Swords.who_has_buff, f"Неправильно відстежуються накладені бафи в глобальній змінній who_has_buff {Swords.who_has_buff}")
 
+    def test_get_buff_vitality(self):
+        """Тестеємо застосування бафу витривалості"""
+        v = 5 # значення на яке ми збільшуємо витривалість через баф
+        result = self.s.get_buff_vitality(v)
+        self.assertIsNone(result, "Ми отримали None при виклику накладення бафу витривалості.")
+        self.assertIsInstance(result, str, "Відповідь після накладення бафу має бути стрічкою.")
+        self.assertTrue(hasattr(self.s, "buff_vitality", "В обєкта Меча відсутній атрибут buff_vitality"))
+        self.assertEqual(self.s.buff_vitality, v, f"Застосоване значення бафу витривалості не відповідає значенню {v}")
+
 
 class TestSwordsCreation(unittest.TestCase):
     """В цьому класі ми тестуємо Клас Меча"""
