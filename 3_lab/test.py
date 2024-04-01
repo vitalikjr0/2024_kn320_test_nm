@@ -234,7 +234,7 @@ def test_reply_from_negative_effects(sword):
     with patch('builtins.print') as mock_print:
         response = sword.negative_effects("Тестувальний ефект")
         if response:
-            assert mock_print.called, "Виклик print не відбувся"
+            assert mock_print.called, "Виклик print не відбувся при застосування негативних ефектів"
 
 # Ця конструкція if не дозволить запустити цей код якщо ми його імпортнемо в інший файл
 if __name__ == '__main__':
