@@ -10,5 +10,10 @@ def index():
 def help():
     return '<h1>Вам потрібна допомога?</h1>'
 
+# Екзамен
+@app.route('/info')
+def info():
+    return '<h1>Ура я зробив завдання на екзамен!</h1>'
+
 if __name__ == '__main__':
     app.run(debug=True)
